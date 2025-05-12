@@ -1,7 +1,5 @@
 # Smarty-Quote
 
-![Smarty-Quote Demo](https://via.placeholder.com/800x400.png?text=Smarty-Quote+Demo)
-
 **Smarty-Quote** is an AI-powered web application that generates inspirational quotes expressed as concise mathematical analogies. Built with **React**, **Tailwind CSS**, and powered by the **Hugging Face Inference API** with the `deepseek/deepseek-prover-v2-671b` model via **Novita AI**, this project showcases modern web development and AI integration.
 
 This app was created as a fun and educational project to explore AI-driven content generation, leveraging tools like **Cursor** for rapid development and **Vercel** for seamless deployment.
