@@ -1,12 +1,43 @@
-# React + Vite
+# Smarty-Quote
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Smarty-Quote Demo](https://via.placeholder.com/800x400.png?text=Smarty-Quote+Demo)
 
-Currently, two official plugins are available:
+**Smarty-Quote** is an AI-powered web application that generates inspirational quotes expressed as concise mathematical analogies. Built with **React**, **Tailwind CSS**, and powered by the **Hugging Face Inference API** with the `deepseek/deepseek-prover-v2-671b` model via **Novita AI**, this project showcases modern web development and AI integration.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This app was created as a fun and educational project to explore AI-driven content generation, leveraging tools like **Cursor** for rapid development and **Vercel** for seamless deployment.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **AI-Generated Quotes**: Create unique mathematical analogies for themes like Motivation, Leadership, Programming, and Success using the DeepSeek-Prover-V2-671B model.
+- **Interactive UI**: Select a theme from a dropdown and generate quotes with a single click.
+- **Responsive Design**: Styled with Tailwind CSS for a clean, modern look across devices.
+- **Copy to Clipboard**: Easily copy generated quotes for sharing.
+- **Secure Configuration**: Uses environment variables to protect API tokens.
+
+## Demo
+
+Check out the live demo: [Smarty-Quote]()
+
+## Technologies Used
+
+- **Frontend**: React, Tailwind CSS, Vite
+- **AI Backend**: Hugging Face Inference API with Novita AI provider (`deepseek/deepseek-prover-v2-671b`)
+- **Tools**: Cursor (AI-assisted coding), Vercel (deployment), GitHub (version control)
+- **Libraries**: Axios (API requests)
+
+## Getting Started
+
+Follow these steps to run Smarty-Quote locally.
+
+### Prerequisites
+
+- **Node.js** (v16 or higher)
+- **npm** or **yarn**
+- A **Hugging Face API token** or **Novita AI API key** (sign up at [Hugging Face](https://huggingface.co/) or [Novita AI](https://novita.ai/))
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/smarty-quote.git
+   cd smarty-quote
