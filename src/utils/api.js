@@ -4,25 +4,20 @@ const client = new InferenceClient(import.meta.env.VITE_HF_ACCESS_TOKEN);
 
 export async function generateQuote(category) {
   try {
-    const prompt = `Generate a meaningful and inspirational quote about ${category}. The quote should be impactful and thought-provoking.`;
-
-    const chatCompletion = await client.chatCompletion({
-      provider: "novita",
-      model: "deepseek-ai/DeepSeek-Prover-V2-671B",
-      messages: [
-        {
-          role: "system",
-          content: "You are a wise quote generator. You create meaningful, impactful quotes that inspire people. Always format your response as a quote followed by the author's name."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
+    const response = await fetch('/api/generate-quote', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ category }),
     });
 
-    const generatedText = chatCompletion.choices[0].message.content;
-    return parseQuote(generatedText, category);
+    if (!response.ok) {
+      throw new Error('Failed to generate quote');
+    }
+
+    const quote = await response.json();
+    return quote;
   } catch (error) {
     console.error('Error generating quote:', error);
     return getLocalQuote(category);
