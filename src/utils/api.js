@@ -66,14 +66,24 @@ const fallbackQuotes = {
   'Success': [
     { text: "The road to success and the road to failure are almost exactly the same.", author: "Colin R. Davis" },
     { text: "Success usually comes to those who are too busy to be looking for it.", author: "Henry David Thoreau" }
+  ],
+  'Poetic': [
+    { text: "Two roads diverged in a wood, and I— I took the one less traveled by, And that has made all the difference.", author: "Robert Frost" },
+    { text: "Hope is the thing with feathers that perches in the soul - and sings the tunes without the words - and never stops at all.", author: "Emily Dickinson" }
+  ],
+  'Random': [
+    { text: "Life is what happens when you're busy making other plans.", author: "John Lennon" },
+    { text: "The universe is not only queerer than we suppose, but queerer than we can suppose.", author: "J.B.S. Haldane" }
   ]
 };
 
 function getLocalQuote(category) {
   const availableCategories = Object.keys(fallbackQuotes);
-  const targetCategory = category === 'all' ? 
-    availableCategories[Math.floor(Math.random() * availableCategories.length)] : 
-    category;
+  
+  // Si es Random o 'all', elegir una categoría aleatoria
+  const targetCategory = category === 'Random' || category === 'all'
+    ? availableCategories[Math.floor(Math.random() * availableCategories.length)]
+    : category;
 
   const categoryQuotes = fallbackQuotes[targetCategory] || fallbackQuotes['Motivation'];
   const randomQuote = categoryQuotes[Math.floor(Math.random() * categoryQuotes.length)];

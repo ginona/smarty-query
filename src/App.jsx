@@ -1,7 +1,67 @@
 import { useState } from 'react'
 import { generateQuote } from './utils/api'
 
-const tags = ['Motivation', 'Leadership', 'Programming', 'Success']
+const categories = [
+  {
+    id: 'Motivation',
+    icon: (
+      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+    ),
+    description: "Get inspired and motivated"
+  },
+  {
+    id: 'Leadership',
+    icon: (
+      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+    ),
+    description: "Lead with wisdom"
+  },
+  {
+    id: 'Programming',
+    icon: (
+      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+      </svg>
+    ),
+    description: "Code with purpose"
+  },
+  {
+    id: 'Success',
+    icon: (
+      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+      </svg>
+    ),
+    description: "Achieve greatness"
+  },
+  {
+    id: 'Poetic',
+    icon: (
+      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+      </svg>
+    ),
+    description: "Express with elegance"
+  },
+  {
+    id: 'Random',
+    icon: (
+      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="16" height="16" rx="2" strokeWidth="2" />
+        <circle cx="8" cy="8" r="1.5" fill="currentColor" />
+        <circle cx="16" cy="8" r="1.5" fill="currentColor" />
+        <circle cx="8" cy="16" r="1.5" fill="currentColor" />
+        <circle cx="16" cy="16" r="1.5" fill="currentColor" />
+        <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+      </svg>
+    ),
+    description: "Surprise yourself"
+  }
+]
 
 function App() {
   const [currentQuote, setCurrentQuote] = useState({
@@ -20,7 +80,7 @@ function App() {
     
     try {
       const category = selectedTag === 'all' 
-        ? tags[Math.floor(Math.random() * tags.length)]
+        ? categories[Math.floor(Math.random() * categories.length)].id
         : selectedTag;
         
       const newQuote = await generateQuote(category)
@@ -49,7 +109,7 @@ function App() {
   return (
     <div className="flex-1 bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-100">
       <div className="container mx-auto px-4 py-12 flex flex-col items-center min-h-screen">
-        <div className="mb-16 text-center">
+        <div className="mb-12 text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 mb-4 animate-fade-in">
             Smarty-Quote
           </h1>
@@ -58,21 +118,35 @@ function App() {
           </p>
         </div>
 
-        <div className="w-full max-w-md mx-auto mb-8">
-          <label htmlFor="tag-select" className="block text-indigo-900 text-lg mb-2 font-medium">
-            Select category:
-          </label>
-          <select
-            id="tag-select"
-            value={selectedTag}
-            onChange={(e) => setSelectedTag(e.target.value)}
-            className="w-full p-3 rounded-lg bg-white text-gray-800 border-2 border-indigo-200 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400 text-lg font-medium shadow-md"
-          >
-            <option value="all">All categories</option>
-            {tags.map((tag) => (
-              <option key={tag} value={tag}>{tag}</option>
+        <div className="w-full max-w-5xl mx-auto mb-12">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Choose Your Inspiration</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedTag(category.id)}
+                className={`p-5 rounded-xl transition-all duration-300 transform hover:scale-105 ${
+                  selectedTag === category.id
+                    ? 'bg-indigo-600 text-white shadow-lg scale-105'
+                    : 'bg-white/80 text-gray-800 hover:bg-indigo-50'
+                }`}
+              >
+                <div className="flex flex-col items-center text-center gap-3">
+                  <div className={`transition-colors duration-300 ${
+                    selectedTag === category.id ? 'text-white' : 'text-indigo-600'
+                  }`}>
+                    {category.icon}
+                  </div>
+                  <h3 className="font-semibold text-lg">{category.id}</h3>
+                  <p className={`text-sm ${
+                    selectedTag === category.id ? 'text-indigo-100' : 'text-gray-600'
+                  }`}>
+                    {category.description}
+                  </p>
+                </div>
+              </button>
             ))}
-          </select>
+          </div>
         </div>
 
         <div className="w-full max-w-2xl mx-auto bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-lg mb-8 transform transition-all duration-300 hover:scale-105">
