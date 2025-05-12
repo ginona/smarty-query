@@ -33,7 +33,8 @@ Follow these steps to run Smarty-Quote locally.
 
 - **Node.js** (v16 or higher)
 - **npm** or **yarn**
-- A **Hugging Face API token** or **Novita AI API key** (sign up at [Hugging Face](https://huggingface.co/) or [Novita AI](https://novita.ai/))
+- A **Hugging Face API token** (sign up at [Hugging Face](https://huggingface.co/))
+- **Vercel CLI** (for local development)
 
 ### Installation
 
@@ -41,3 +42,51 @@ Follow these steps to run Smarty-Quote locally.
    ```bash
    git clone https://github.com/your-username/smarty-quote.git
    cd smarty-quote
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Install Vercel CLI globally**:
+   ```bash
+   npm install -g vercel
+   ```
+
+4. **Set up environment variables**:
+   Create a `.env` file in the root directory with:
+   ```
+   HF_ACCESS_TOKEN=your_huggingface_token_here
+   ```
+
+5. **Run the development server**:
+   ```bash
+   vercel dev
+   ```
+   The first time you run this command, it will:
+   - Ask you to log in to Vercel
+   - Link the project to your Vercel account
+   - Set up the development environment
+
+   After setup, the app will be available at `http://localhost:3000`
+
+### Deployment
+
+The app is configured for automatic deployment with Vercel:
+
+1. Push your changes to GitHub
+2. Vercel will automatically deploy your updates
+3. Make sure to set the `HF_ACCESS_TOKEN` environment variable in your Vercel project settings
+
+## Contributing
+
+Feel free to open issues or submit pull requests. All contributions are welcome!
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## Author
+
+Created by Gino Nacchio
