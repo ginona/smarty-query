@@ -115,9 +115,18 @@ function App() {
     canvas.width = 1080;
     canvas.height = 1920;
     
-    // Set background
-    ctx.fillStyle = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    // Create gradient background
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    gradient.addColorStop(0, '#667eea');
+    gradient.addColorStop(1, '#764ba2');
+    ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Add some style to the background
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.font = 'bold 200px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('"', canvas.width / 2, canvas.height / 2 - 400);
     
     // Configure text
     ctx.fillStyle = 'white';
@@ -126,7 +135,7 @@ function App() {
     
     // Draw quote
     ctx.font = 'bold 60px Arial';
-    const maxWidth = canvas.width - 100;
+    const maxWidth = canvas.width - 200; // Increased padding
     const lineHeight = 80;
     const x = canvas.width / 2;
     let y = canvas.height / 2 - 100;
@@ -139,27 +148,27 @@ function App() {
       const testLine = line + word + ' ';
       const metrics = ctx.measureText(testLine);
       
-      if (metrics.width > maxWidth) {
-        ctx.fillText(line, x, y);
+      if (metrics.width > maxWidth && line !== '') {
+        ctx.fillText(line.trim(), x, y);
         line = word + ' ';
         y += lineHeight;
       } else {
         line = testLine;
       }
     });
-    ctx.fillText(line, x, y);
+    ctx.fillText(line.trim(), x, y);
     
     // Draw author
     y += lineHeight * 2;
-    ctx.font = 'italic 40px Arial';
+    ctx.font = 'italic 48px Arial';
     ctx.fillText(`- ${currentQuote.author}`, x, y);
     
     // Draw hashtags
     y += lineHeight;
-    ctx.font = '30px Arial';
+    ctx.font = '36px Arial';
     ctx.fillText(`#${currentQuote.tag} #SmartyQuote`, x, y);
     
-    return canvas.toDataURL('image/jpeg', 0.8);
+    return canvas.toDataURL('image/jpeg', 1.0);
   }
 
   const shareOnInstagram = async () => {
@@ -167,25 +176,23 @@ function App() {
       // Generate the image
       const imageUrl = generateQuoteImage();
       
-      // Create a temporary link to download the image
-      const link = document.createElement('a');
-      link.href = imageUrl;
-      link.download = 'smarty-quote.jpg';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Try to open Instagram Stories with the image data
+      const encodedImage = encodeURIComponent(imageUrl);
+      window.location.href = `instagram-stories://share?source_application=smarty-quote&media=${encodedImage}`;
       
-      // Open Instagram Stories
+      // Fallback if the protocol doesn't work
       setTimeout(() => {
-        window.open('instagram://story-camera', '_blank');
-      }, 500);
+        if (document.hidden) {
+          // Instagram opened successfully
+          return;
+        }
+        // If Instagram didn't open, show error
+        setError('Could not open Instagram. Please make sure you have Instagram app installed.');
+      }, 2000);
       
-      // Show success message
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 2000);
     } catch (error) {
-      console.error('Error generating image:', error);
-      setError('Failed to generate image for Instagram Story');
+      console.error('Error sharing to Instagram:', error);
+      setError('Failed to share to Instagram Story');
     }
   }
 
