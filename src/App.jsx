@@ -48,7 +48,7 @@ function App() {
     setError(null)
     
     try {
-      const newQuote = await generateQuote(selectedMood.category)
+      const newQuote = await generateQuote(selectedMood.id)
       setCurrentQuote(newQuote)
     } catch (err) {
       setError('Failed to generate quote. Please try again.')
