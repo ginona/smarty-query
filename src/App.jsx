@@ -106,99 +106,19 @@ function App() {
     window.open(`https://twitter.com/intent/tweet?text=${encodedText}`, '_blank')
   }
 
-  const generateQuoteImage = () => {
-    // Create canvas
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    // Set canvas size (Instagram story aspect ratio 9:16)
-    canvas.width = 1080;
-    canvas.height = 1920;
-    
-    // Create gradient background
-    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-    gradient.addColorStop(0, '#667eea');
-    gradient.addColorStop(1, '#764ba2');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Add some style to the background
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-    ctx.font = 'bold 200px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('"', canvas.width / 2, canvas.height / 2 - 400);
-    
-    // Configure text
-    ctx.fillStyle = 'white';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    
-    // Draw quote
-    ctx.font = 'bold 60px Arial';
-    const maxWidth = canvas.width - 200; // Increased padding
-    const lineHeight = 80;
-    const x = canvas.width / 2;
-    let y = canvas.height / 2 - 100;
-    
-    // Word wrap the quote text
-    const words = currentQuote.text.split(' ');
-    let line = '';
-    
-    words.forEach(word => {
-      const testLine = line + word + ' ';
-      const metrics = ctx.measureText(testLine);
-      
-      if (metrics.width > maxWidth && line !== '') {
-        ctx.fillText(line.trim(), x, y);
-        line = word + ' ';
-        y += lineHeight;
-      } else {
-        line = testLine;
-      }
-    });
-    ctx.fillText(line.trim(), x, y);
-    
-    // Draw author
-    y += lineHeight * 2;
-    ctx.font = 'italic 48px Arial';
-    ctx.fillText(`- ${currentQuote.author}`, x, y);
-    
-    // Draw hashtags
-    y += lineHeight;
-    ctx.font = '36px Arial';
-    ctx.fillText(`#${currentQuote.tag} #SmartyQuote`, x, y);
-    
-    return canvas.toDataURL('image/jpeg', 1.0);
-  }
-
-  const shareOnInstagram = async () => {
-    try {
-      // Generate the image
-      const imageUrl = generateQuoteImage();
-      
-      // Try to open Instagram Stories with the image data
-      const encodedImage = encodeURIComponent(imageUrl);
-      window.location.href = `instagram-stories://share?source_application=smarty-quote&media=${encodedImage}`;
-      
-      // Fallback if the protocol doesn't work
-      setTimeout(() => {
-        if (document.hidden) {
-          // Instagram opened successfully
-          return;
-        }
-        // If Instagram didn't open, show error
-        setError('Could not open Instagram. Please make sure you have Instagram app installed.');
-      }, 2000);
-      
-    } catch (error) {
-      console.error('Error sharing to Instagram:', error);
-      setError('Failed to share to Instagram Story');
-    }
-  }
-
   return (
     <div className="flex-1 bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-100">
       <div className="container mx-auto px-4 py-12 flex flex-col items-center min-h-screen">
+        {/* Loading Overlay */}
+        {isLoading && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl p-8 flex flex-col items-center space-y-4">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-600"></div>
+              <p className="text-gray-800 font-medium text-lg">Generating your quote...</p>
+            </div>
+          </div>
+        )}
+
         <div className="mb-12 text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 mb-4 animate-fade-in">
             Smarty-Quote
@@ -239,17 +159,30 @@ function App() {
           </div>
         </div>
 
-        <div className="w-full max-w-2xl mx-auto bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-lg mb-8 transform transition-all duration-300 hover:scale-105">
-          <div className="border-l-4 border-indigo-400 pl-6">
-            <blockquote className="text-xl md:text-2xl mb-4 text-gray-700 font-medium leading-relaxed">
-              "{currentQuote.text}"
-            </blockquote>
-            <p className="text-right text-gray-800 font-bold text-lg">
-              - {currentQuote.author}
-            </p>
-            <p className="text-right text-indigo-600 text-sm mt-2">
-              #{currentQuote.tag}
-            </p>
+        <div className="w-full max-w-2xl mx-auto mb-8">
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+            <div className="relative p-8 bg-white/80 backdrop-blur-xl rounded-xl shadow-xl transition-all duration-300 transform hover:scale-[1.01] cursor-pointer">
+              <div className="absolute top-4 right-4 text-indigo-600/50">
+                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/>
+                </svg>
+              </div>
+              <div className="flex flex-col items-center text-center space-y-6">
+                <blockquote className="text-2xl md:text-3xl font-serif text-gray-800 leading-relaxed">
+                  "{currentQuote.text}"
+                </blockquote>
+                <div className="flex flex-col items-center space-y-2">
+                  <p className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    {currentQuote.author}
+                  </p>
+                  <p className="text-sm font-medium text-indigo-600">
+                    #{currentQuote.tag}
+                  </p>
+                </div>
+                <div className="w-16 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full"></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -259,37 +192,28 @@ function App() {
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row gap-4 justify-center w-full max-w-md mx-auto">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-md mx-auto">
           <button
             onClick={handleGenerateQuote}
             disabled={isLoading}
-            className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-lg shadow-md"
+            className="flex-1 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-lg shadow-md"
           >
-            {isLoading ? 'Generating...' : 'Generate Quote'}
+            Generate Quote
           </button>
           <button
             onClick={copyQuote}
-            className="bg-gradient-to-r from-purple-400 to-purple-500 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-lg shadow-md"
+            className="flex-1 bg-gradient-to-r from-purple-400 to-purple-500 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-lg shadow-md"
           >
             Copy Quote
           </button>
           <button
             onClick={shareOnX}
-            className="bg-gradient-to-r from-blue-400 to-blue-500 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-lg shadow-md flex items-center justify-center gap-2"
+            className="flex-1 bg-gradient-to-r from-gray-800 to-black text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-lg shadow-md flex items-center justify-center gap-2"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
             </svg>
             Share
-          </button>
-          <button
-            onClick={shareOnInstagram}
-            className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-lg shadow-md flex items-center justify-center gap-2"
-          >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-            </svg>
-            Share Story
           </button>
         </div>
 
