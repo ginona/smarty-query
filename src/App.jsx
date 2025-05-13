@@ -171,12 +171,17 @@ function App() {
           <div className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
             <div className="relative p-8 bg-gray-800/90 backdrop-blur-xl rounded-xl shadow-xl transition-all duration-300 transform hover:scale-[1.01] cursor-pointer">
-              <div className="absolute top-4 right-4 text-purple-400/50">
+              <div className="absolute top-2 right-2 text-purple-400/15">
                 <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/>
                 </svg>
               </div>
-              <div className="flex flex-col items-center text-center space-y-6">
+              <div className="absolute bottom-2 left-2 text-purple-400/15 transform rotate-180">
+                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/>
+                </svg>
+              </div>
+              <div className="flex flex-col items-center text-center space-y-6 relative z-10 px-8">
                 <blockquote className="text-2xl md:text-3xl font-serif text-gray-200 leading-relaxed">
                   "{currentQuote.text}"
                 </blockquote>
