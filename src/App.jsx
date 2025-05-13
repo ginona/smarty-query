@@ -109,7 +109,19 @@ function App() {
   const shareOnInstagram = () => {
     const quoteText = `"${currentQuote.text}" - ${currentQuote.author}\n#${currentQuote.tag} #SmartyQuote`
     const encodedText = encodeURIComponent(quoteText)
-    window.open(`https://www.instagram.com/create/story?text=${encodedText}`, '_blank')
+    
+    // Try to open Instagram app first
+    const instagramUrl = `instagram://story-camera`
+    const webUrl = `https://www.instagram.com/create/story?text=${encodedText}`
+    
+    // Try to open the app first, if it fails after a timeout, open the web version
+    const openApp = window.open(instagramUrl, '_blank')
+    
+    setTimeout(() => {
+      if (!openApp || openApp.closed || typeof openApp.closed === 'undefined') {
+        window.open(webUrl, '_blank')
+      }
+    }, 1000)
   }
 
   return (
