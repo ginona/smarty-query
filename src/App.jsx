@@ -1,65 +1,34 @@
 import { useState } from 'react'
 import { generateQuote } from './utils/api'
 
-const categories = [
+const moods = [
   {
-    id: 'Motivation',
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-    ),
-    description: "Get inspired and motivated"
+    id: 'inspiring',
+    name: 'Inspiring',
+    icon: '✨',
+    description: 'Elevate your spirit',
+    category: 'Motivation'
   },
   {
-    id: 'Leadership',
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    ),
-    description: "Lead with wisdom"
+    id: 'peaceful',
+    name: 'Peaceful',
+    icon: '🌊',
+    description: 'Find your calm',
+    category: 'Poetic'
   },
   {
-    id: 'Programming',
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-      </svg>
-    ),
-    description: "Code with purpose"
+    id: 'energetic',
+    name: 'Energetic',
+    icon: '⚡',
+    description: 'Boost your energy',
+    category: 'Success'
   },
   {
-    id: 'Success',
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-      </svg>
-    ),
-    description: "Achieve greatness"
-  },
-  {
-    id: 'Poetic',
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-      </svg>
-    ),
-    description: "Express with elegance"
-  },
-  {
-    id: 'Random',
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <rect x="4" y="4" width="16" height="16" rx="2" strokeWidth="2" />
-        <circle cx="8" cy="8" r="1.5" fill="currentColor" />
-        <circle cx="16" cy="8" r="1.5" fill="currentColor" />
-        <circle cx="8" cy="16" r="1.5" fill="currentColor" />
-        <circle cx="16" cy="16" r="1.5" fill="currentColor" />
-        <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-      </svg>
-    ),
-    description: "Surprise yourself"
+    id: 'focused',
+    name: 'Focused',
+    icon: '🎯',
+    description: 'Sharpen your mind',
+    category: 'Programming'
   }
 ]
 
@@ -69,7 +38,7 @@ function App() {
     author: "Smarty-Quote",
     tag: "Motivation"
   })
-  const [selectedTag, setSelectedTag] = useState('all')
+  const [selectedMood, setSelectedMood] = useState(moods[0])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
   const [showToast, setShowToast] = useState(false)
@@ -79,11 +48,7 @@ function App() {
     setError(null)
     
     try {
-      const category = selectedTag === 'all' 
-        ? categories[Math.floor(Math.random() * categories.length)].id
-        : selectedTag;
-        
-      const newQuote = await generateQuote(category)
+      const newQuote = await generateQuote(selectedMood.category)
       setCurrentQuote(newQuote)
     } catch (err) {
       setError('Failed to generate quote. Please try again.')
@@ -130,37 +95,29 @@ function App() {
           <div className="flex items-center justify-center gap-3 flex-nowrap px-4">
             <div className="hidden sm:block h-[1px] w-12 bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
             <p className="text-lg text-purple-300 font-medium tracking-wider whitespace-nowrap">
-              ✨ Wisdom at Your Fingertips ✨
+              Choose Your Daily Inspiration
             </p>
             <div className="hidden sm:block h-[1px] w-12 bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
           </div>
         </div>
 
-        <div className="w-full max-w-5xl mx-auto mb-12">
-          <h2 className="text-2xl font-semibold text-gray-200 mb-6 text-center">Choose Your Inspiration</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            {categories.map((category) => (
+        {/* Mood Selector */}
+        <div className="w-full max-w-3xl mx-auto mb-12">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {moods.map((mood) => (
               <button
-                key={category.id}
-                onClick={() => setSelectedTag(category.id)}
-                className={`p-5 rounded-xl transition-all duration-300 transform hover:scale-105 ${
-                  selectedTag === category.id
-                    ? 'bg-purple-600 text-white shadow-lg scale-105'
+                key={mood.id}
+                onClick={() => setSelectedMood(mood)}
+                className={`p-6 rounded-xl transition-all duration-300 transform hover:scale-105 ${
+                  selectedMood.id === mood.id
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
                     : 'bg-gray-800/80 text-gray-200 hover:bg-gray-700'
                 }`}
               >
                 <div className="flex flex-col items-center text-center gap-3">
-                  <div className={`transition-colors duration-300 ${
-                    selectedTag === category.id ? 'text-white' : 'text-purple-400'
-                  }`}>
-                    {category.icon}
-                  </div>
-                  <h3 className="font-semibold text-lg">{category.id}</h3>
-                  <p className={`text-sm ${
-                    selectedTag === category.id ? 'text-purple-200' : 'text-gray-400'
-                  }`}>
-                    {category.description}
-                  </p>
+                  <span className="text-4xl mb-2">{mood.icon}</span>
+                  <h3 className="font-semibold text-lg">{mood.name}</h3>
+                  <p className="text-sm text-gray-400">{mood.description}</p>
                 </div>
               </button>
             ))}
