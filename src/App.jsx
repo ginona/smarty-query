@@ -142,8 +142,8 @@ function App() {
                 <blockquote className="text-2xl md:text-3xl font-serif text-gray-200 leading-relaxed">
                   "{currentQuote.text}"
                 </blockquote>
-                <div className="flex flex-col items-center space-y-2">
-                  <p className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                <div className="flex flex-col items-center space-y-2 w-full px-4">
+                  <p className="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent break-words">
                     {currentQuote.author}
                   </p>
                   <p className="text-sm font-medium text-purple-400">
