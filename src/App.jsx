@@ -121,18 +121,18 @@ function App() {
 
         <div className="mb-16 text-center relative">
           <div className="absolute -inset-2 bg-gradient-to-r from-purple-600/20 via-pink-500/20 to-purple-600/20 blur-xl"></div>
-          <h1 className="relative text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-300 to-purple-400 mb-6 animate-fade-in tracking-tight">
+          <h1 className="relative text-[3.25rem] sm:text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-300 to-purple-400 mb-6 animate-fade-in tracking-tight px-3 leading-normal py-2">
             Smarty
             <span className="bg-gradient-to-r from-pink-400 via-purple-300 to-pink-400 bg-clip-text mx-2">
               Quote
             </span>
           </h1>
-          <div className="flex items-center justify-center gap-3">
-            <div className="h-[1px] w-12 bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
-            <p className="text-lg text-purple-300 font-medium tracking-wider">
+          <div className="flex items-center justify-center gap-3 flex-nowrap px-4">
+            <div className="hidden sm:block h-[1px] w-12 bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
+            <p className="text-lg text-purple-300 font-medium tracking-wider whitespace-nowrap">
               ✨ Wisdom at Your Fingertips ✨
             </p>
-            <div className="h-[1px] w-12 bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
+            <div className="hidden sm:block h-[1px] w-12 bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
           </div>
         </div>
 
