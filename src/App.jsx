@@ -106,22 +106,87 @@ function App() {
     window.open(`https://twitter.com/intent/tweet?text=${encodedText}`, '_blank')
   }
 
-  const shareOnInstagram = () => {
-    const quoteText = `"${currentQuote.text}" - ${currentQuote.author}\n#${currentQuote.tag} #SmartyQuote`
-    const encodedText = encodeURIComponent(quoteText)
+  const generateQuoteImage = () => {
+    // Create canvas
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
     
-    // Try to open Instagram app first
-    const instagramUrl = `instagram://story-camera`
-    const webUrl = `https://www.instagram.com/create/story?text=${encodedText}`
+    // Set canvas size (Instagram story aspect ratio 9:16)
+    canvas.width = 1080;
+    canvas.height = 1920;
     
-    // Try to open the app first, if it fails after a timeout, open the web version
-    const openApp = window.open(instagramUrl, '_blank')
+    // Set background
+    ctx.fillStyle = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    setTimeout(() => {
-      if (!openApp || openApp.closed || typeof openApp.closed === 'undefined') {
-        window.open(webUrl, '_blank')
+    // Configure text
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    // Draw quote
+    ctx.font = 'bold 60px Arial';
+    const maxWidth = canvas.width - 100;
+    const lineHeight = 80;
+    const x = canvas.width / 2;
+    let y = canvas.height / 2 - 100;
+    
+    // Word wrap the quote text
+    const words = currentQuote.text.split(' ');
+    let line = '';
+    
+    words.forEach(word => {
+      const testLine = line + word + ' ';
+      const metrics = ctx.measureText(testLine);
+      
+      if (metrics.width > maxWidth) {
+        ctx.fillText(line, x, y);
+        line = word + ' ';
+        y += lineHeight;
+      } else {
+        line = testLine;
       }
-    }, 1000)
+    });
+    ctx.fillText(line, x, y);
+    
+    // Draw author
+    y += lineHeight * 2;
+    ctx.font = 'italic 40px Arial';
+    ctx.fillText(`- ${currentQuote.author}`, x, y);
+    
+    // Draw hashtags
+    y += lineHeight;
+    ctx.font = '30px Arial';
+    ctx.fillText(`#${currentQuote.tag} #SmartyQuote`, x, y);
+    
+    return canvas.toDataURL('image/jpeg', 0.8);
+  }
+
+  const shareOnInstagram = async () => {
+    try {
+      // Generate the image
+      const imageUrl = generateQuoteImage();
+      
+      // Create a temporary link to download the image
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = 'smarty-quote.jpg';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Open Instagram Stories
+      setTimeout(() => {
+        window.open('instagram://story-camera', '_blank');
+      }, 500);
+      
+      // Show success message
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2000);
+    } catch (error) {
+      console.error('Error generating image:', error);
+      setError('Failed to generate image for Instagram Story');
+    }
   }
 
   return (
@@ -226,7 +291,7 @@ function App() {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
-            <span>Quote copied to clipboard!</span>
+            <span>Image saved! Now you can share it in your Story</span>
           </div>
         )}
 
